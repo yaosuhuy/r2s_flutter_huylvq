@@ -1,15 +1,8 @@
-{\rtf1\ansi\ansicpg1252\cocoartf2821
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;}
-{\*\expandedcolortbl;;}
-\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+- Git conflict xảy ra khi:
++ Từ file a của nhánh main đang có nội dung là abc, nếu như File a này bị chỉnh sửa thành xyz
++ Có một nhánh khác, tạm gọi là nhánh X cũng đang sửa File a thành mnpq 
++  Vậy khi nhánh X tạo một request merge vào nhành main thì sẽ bị conflict vì git đang không hiểu phải xử lý với nhánh nào
 
-\f0\fs24 \cf0 - Git conflict x\uc0\u7843 y ra khi:\
-+ T\uc0\u7915  file a c\u7911 a nh\'e1nh main \u273 ang c\'f3 n\u7897 i dung l\'e0 abc, n\u7871 u nh\u432  File a n\'e0y b\u7883  ch\u7881 nh s\u7917 a th\'e0nh xyz\
-+ C\'f3 m\uc0\u7897 t nh\'e1nh kh\'e1c, t\u7841 m g\u7885 i l\'e0 nh\'e1nh X c\u361 ng \u273 ang s\u7917 a File a th\'e0nh mnpq \
-+  V\uc0\u7853 y khi nh\'e1nh X t\u7841 o m\u7897 t request merge v\'e0o nh\'e0nh main th\'ec s\u7869  b\u7883  conflict v\'ec git \u273 ang kh\'f4ng hi\u7875 u ph\u7843 i x\u7917  l\'fd v\u7899 i nh\'e1nh n\'e0o\
-\
-- C\'e1ch x\uc0\u7917  l\'fd:\
-+ Resolve conflict ngay trong GitHub\
-+ S\uc0\u7917  d\u7909 ng Git Rebase }
+- Cách xử lý:
++ Resolve conflict ngay trong GitHub
++ Sử dụng Git Rebase 
