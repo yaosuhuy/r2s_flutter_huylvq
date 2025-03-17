@@ -23,7 +23,9 @@ void main() {
     return;
   } else {
     print("Array after removal");
-    list.remove(targetNumber);
+    do {
+      list.remove(targetNumber);
+    } while (list.contains(targetNumber));
     for (int element in list) {
       print("Element is: $element");
     }
