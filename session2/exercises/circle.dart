@@ -1,11 +1,12 @@
 import 'dart:io';
+import 'dart:math';
 
-double circleArea({required int radius}) {
-  return 3.14 * radius * radius;
+double circleAreaCalculator({required int radius}) {
+  return pi * radius * radius;
 }
 
-double circlePerimeter({required int radius}) {
-  return 2 * 3.14 * radius;
+double circlePerimeterCalculator({required int radius}) {
+  return pi * radius;
 }
 
 void main() {
@@ -19,15 +20,15 @@ void main() {
       case 1:
         print("Enter circle's radius: ");
         int radius = int.parse(stdin.readLineSync()!);
-        print("Circle's area is: ${circleArea(radius: radius)}");
+        print("Circle's area is: ${circleAreaCalculator(radius: radius)}");
         break;
       case 2:
         print("Enter circle's radius: ");
         int radius = int.parse(stdin.readLineSync()!);
-        print("Circle's perimeter is: ${circlePerimeter(radius: radius)}");
+        print("Circle's perimeter is: ${circlePerimeterCalculator(radius: radius)}");
         break;
       case 3:
-        return;
+        break;
       default:
         print("Invalid choice");
     }
