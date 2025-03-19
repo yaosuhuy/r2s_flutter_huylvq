@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
-double squareRootCalculate({required double number}) {
+double calculateSqaureRoot({required double number}) {
   return sqrt(number);
 }
 
@@ -10,15 +10,19 @@ void main() {
   bool isValid = false;
   do {
     try {
-    print("Enter a number: ");
-    number = double.parse(stdin.readLineSync()!);
-    if (number < 0) {
-      throw Exception("Square root of negative number is not allowed");
+      print("Enter a number: ");
+      String? input = stdin.readLineSync();
+      if (input == null || double.tryParse(input) == null) {
+        throw Exception("Invalid input: Not a number");
+      }
+      number = double.parse(input);
+      if (number < 0) {
+        throw Exception("Square root of negative number is not allowed");
+      }
+      isValid = true;
+    } catch (e) {
+      print("Error: " + e.toString());
     }
-    isValid = true;
-  } catch (e) {
-    print(e);
-  }
   } while (!isValid);
-  print("Square root of $number is: ${squareRootCalculate(number: number)}");
+  print("Square root of $number is: ${calculateSqaureRoot(number: number)}");
 }
