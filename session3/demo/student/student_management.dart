@@ -20,23 +20,25 @@ void printStudentDetails({required Student student}) {
   print("-------------------------------");
 }
 
-void inputStudentDetails({required Student student, required List<Student> students}) {
-  bool isUniqueId = false;
+bool checkUniqueId({required int id, required List<Student> students}) {
+  return students.every((s) => s.id != id);
+}
 
+void inputStudentDetails({
+  required Student student,
+  required List<Student> students,
+}) {
+  bool isUniqueId = false;
+  int id;
   do {
     print("Enter student's id: ");
-
-    int id = int.parse(stdin.readLineSync()!);
-
-    isUniqueId = students.every((s) => s.id != id);
-
-    if (isUniqueId) {
-      student.id = id;
-    } else {
-      print("ID already exists. Please enter a unique ID.");
-    }
-    
+    id = int.parse(stdin.readLineSync()!);
+    isUniqueId = checkUniqueId(id: id, students: students);
+    if (!isUniqueId) {
+      print("ID is already taken");
+    } 
   } while (!isUniqueId);
+  student.id = id;
 
   print("Enter student's name: ");
   student.name = stdin.readLineSync();
@@ -115,6 +117,7 @@ void main() {
 
         Student? foundStudent;
 
+        // divide it to a function to make it reusable
         for (Student student in students) {
           if (student.id == findId) {
             foundStudent = student;
@@ -140,7 +143,7 @@ void main() {
             foundStudents.add(student);
           }
         }
-      
+
         if (foundStudents.isNotEmpty) {
           for (Student student in foundStudents) {
             printStudentDetails(student: student);
