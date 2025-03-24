@@ -1,0 +1,19 @@
+class Student {
+  // Properties
+  late int id;
+  late String? name;
+  late num mark1;
+  late num mark2;
+  late num mark3;
+
+  // Methods
+  num total(){
+    return mark1 + mark2 + mark3;
+  }
+
+  num average(){
+    return total() / 3;
+  }
+
+  
+}
