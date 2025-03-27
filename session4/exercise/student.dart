@@ -24,41 +24,59 @@ class Student extends Person {
     return (theory + practice) / 2;
   }
 
-  @override
-  void inputPerson() {
-    super.inputPerson();
+  bool checkStudentID() {
+    if (existingStudentIDs.contains(studentID)) {
+      print("Student ID is already taken, please enter another ID");
+      return false;
+    } else {
+      existingStudentIDs.add(studentID);
+      return true;
+    }
+  }
 
-    do {
-      print("Enter student ID: ");
-      studentID = stdin.readLineSync()!;
-      if (existingStudentIDs.contains(studentID)) {
-        print("Student ID is already taken, please enter another ID");
-      } else {
-        existingStudentIDs.add(studentID);
-        break;
-      }
-    } while (true);
+  bool checkMark(double value){
+    if (value < 0 || value > 10) {
+      print("Invalid input: Mark must be between 0 and 10");
+      return false;
+    } else {
+      return true;
+    }
+  }
 
+  double inputMark(String prompt) {
+    double value;
     do {
       try {
-        print("Enter theory mark: ");
-        theory = double.parse(stdin.readLineSync()!);
-        break;
+        print(prompt);
+        value = double.parse(stdin.readLineSync()!);
+        if (checkMark(value)) {
+          break;
+        }
       } catch (e) {
         print("Invalid input: Theory mark must be a number");
       }
     } while (true);
+    return value;
+  }
 
+  @override
+  void inputPerson() {
     do {
-      try {
-        print("Enter practice mark: ");
-        practice = double.parse(stdin.readLineSync()!);
+      print("Enter student ID: ");
+      studentID = stdin.readLineSync()!;
+      if (checkStudentID()) {
         break;
-      } catch (e) {
-        print("Invalid input: Practice mark must be a number");
       }
     } while (true);
+    inputPersonDetails();
   }
+
+  void inputPersonDetails() {
+    super.inputPerson();
+    theory = inputMark("Enter theory mark: ");
+    practice = inputMark("Enter practice mark: ");
+  }
+    
 
   @override
   void displayPerson() {

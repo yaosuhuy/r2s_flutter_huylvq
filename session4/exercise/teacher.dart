@@ -19,29 +19,25 @@ class Teacher extends Person {
     return basicSalary + subsidy;
   }
 
+  double inputMoney(String prompt) {
+    double value;
+    do {
+      try {
+        print(prompt);
+        value = double.parse(stdin.readLineSync()!);
+        break;
+      } catch (e) {
+        print("Invalid input: Salary/Subsidy must be a number");
+      }
+    } while (true);
+    return value;
+  }
+
   @override
   void inputPerson(){
     super.inputPerson();
-
-    do {
-      try {
-        print("Enter basic salary: ");
-        basicSalary = double.parse(stdin.readLineSync()!);
-        break;
-      } catch (e) {
-        print("Invalid input: Basic salary must be a number");
-      }
-    } while (true);
-
-    do {
-      try {
-        print("Enter subsidy: ");
-        subsidy = double.parse(stdin.readLineSync()!);
-        break;
-      } catch (e) {
-        print("Invalid input: Subsidy must be a number");
-      }
-    } while (true);
+    inputMoney("Enter basic salary: ");
+    inputMoney("Enter subsidy: ");
   }
 
   @override
