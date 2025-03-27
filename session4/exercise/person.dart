@@ -8,7 +8,7 @@ abstract class Person {
 
   Person(this.name, this.gender, this.phoneNumber, this.email);
 
-  bool checkGender() {
+  bool isGenderValidated() {
     if (gender.toLowerCase() == "male" || gender.toLowerCase() == "female") {
       return true;
     } else {
@@ -17,7 +17,7 @@ abstract class Person {
     }
   }
 
-  bool checkPhoneNumber() {
+  bool isPhoneNumberValidated() {
     if (RegExp(r'^09\d{8}$').hasMatch(phoneNumber)) {
       return true;
     } else {
@@ -28,7 +28,7 @@ abstract class Person {
     }
   }
 
-  bool checkEmail() {
+  bool isEmailChecked() {
     if (RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)) {
       return true;
     } else {
@@ -53,7 +53,7 @@ abstract class Person {
     do {
       print("Enter gender: ");
       gender = stdin.readLineSync()!;
-      if (checkGender()) {
+      if (isGenderValidated()) {
         break;
       }
     } while (true);
@@ -61,7 +61,7 @@ abstract class Person {
     do {
       print("Enter phone number: ");
       phoneNumber = stdin.readLineSync()!;
-      if (checkPhoneNumber()) {
+      if (isPhoneNumberValidated()) {
         break;
       }
     } while (true);
@@ -69,7 +69,7 @@ abstract class Person {
     do {
       print("Enter email: ");
       email = stdin.readLineSync()!;
-      if (checkEmail()) {
+      if (isEmailChecked()) {
         break;
       }
     } while (true);

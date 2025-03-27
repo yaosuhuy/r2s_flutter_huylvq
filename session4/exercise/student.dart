@@ -24,7 +24,7 @@ class Student extends Person {
     return (theory + practice) / 2;
   }
 
-  bool checkStudentID() {
+  bool isStudentIDValidated() {
     if (existingStudentIDs.contains(studentID)) {
       print("Student ID is already taken, please enter another ID");
       return false;
@@ -34,7 +34,7 @@ class Student extends Person {
     }
   }
 
-  bool checkMark(double value){
+  bool isCheckMarkValidated(double value){
     if (value < 0 || value > 10) {
       print("Invalid input: Mark must be between 0 and 10");
       return false;
@@ -49,7 +49,7 @@ class Student extends Person {
       try {
         print(prompt);
         value = double.parse(stdin.readLineSync()!);
-        if (checkMark(value)) {
+        if (isCheckMarkValidated(value)) {
           break;
         }
       } catch (e) {
@@ -64,7 +64,7 @@ class Student extends Person {
     do {
       print("Enter student ID: ");
       studentID = stdin.readLineSync()!;
-      if (checkStudentID()) {
+      if (isStudentIDValidated()) {
         break;
       }
     } while (true);
