@@ -35,6 +35,11 @@ class SqliteHelper {
         mealDate TIMESTAMP NOT NULL,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )''');
+
+    await db.execute('''CREATE TABLE categories(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        categoryName TEXT NOT NULL
+        )''');
   }
 
   Future<int> insertMeal(Meal meal) async {
@@ -45,6 +50,11 @@ class SqliteHelper {
     );
   }
 
+  Future<int> insertCategory(String name) async {
+    final db = await database;
+    return await db.insert('categories', {'categoryName': name});
+  }
+
   Future<List<Meal>> getMeals() async {
     final db = await database;
     const orderBy = 'createdAt DESC';
@@ -52,6 +62,11 @@ class SqliteHelper {
         await db.query('meals', orderBy: orderBy);
     debugPrint('Meals in database: $result');
     return result.map((json) => Meal.fromMap(json)).toList();
+  }
+
+  Future<List<Map<String, dynamic>>> getCategories() async {
+    final db = await database;
+    return await db.query('categories', orderBy: 'categoryName ASC');
   }
 
   Future<Meal?> getMeal(int id) async {
@@ -83,6 +98,11 @@ class SqliteHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  Future<int> deleteCategory(int id) async {
+    final db = await database;
+    return await db.delete('categories', where: 'id = ?', whereArgs: [id]);
   }
 
   Future<void> deleteAllMeals() async {
@@ -134,5 +154,25 @@ class SqliteHelper {
       totalMeals += count ?? 0;
     }
     return totalMeals;
+  }
+
+  Future<List<double>> getCaloriesPerDay(DateTime startOfWeek) async {
+    final db = await database;
+    final List<double> caloriesPerDay = [];
+
+    for (int i = 0; i < 7; i++) {
+      final day = startOfWeek.add(Duration(days: i));
+      final nextDay = day.add(Duration(days: 1));
+
+      final result = await db.rawQuery(
+          'SELECT SUM(mealCalories) FROM meals WHERE mealDate >= ? AND mealDate <= ?',
+          [day.toIso8601String(), nextDay.toIso8601String()]);
+
+      final totalCalories =
+          (result.first['SUM(mealCalories)'] as num?)?.toDouble() ?? 0.0;
+      debugPrint('Total calories for $day: $totalCalories');
+      caloriesPerDay.add(totalCalories);
+    }
+    return caloriesPerDay;
   }
 }

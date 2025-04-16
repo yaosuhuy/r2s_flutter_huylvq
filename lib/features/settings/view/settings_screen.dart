@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meal_planner_app/core/ultis/show_categories_dialog.dart';
 
 class SettingsScreen extends StatefulWidget {
   final Function(bool) onThemeChanged;
@@ -53,7 +54,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: const Text('Edit Meal Categories'),
               onTap: () {
                 // Xử lý khi nhấn vào
-                debugPrint('Edit Meal Categories tapped');
+                showCategoriesDialog(context);
               },
             ),
             const Divider(),

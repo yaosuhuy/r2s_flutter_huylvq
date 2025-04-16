@@ -12,18 +12,10 @@ class SummaryScreen extends StatefulWidget {
 class _SummaryScreenState extends State<SummaryScreen> {
   // Dữ liệu mẫu: số bữa đã lên kế hoạch trong tuần
   int _totalMeals = 0;
-  final List<double> _caloriesPerDay = [
-    1500,
-    1800,
-    2000,
-    1700,
-    1600,
-    1900,
-    2100
-  ]; // Calories mỗi ngày
+  final List<double> _caloriesPerDay = [];
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _loadMealsPerWeek();
   }
@@ -31,13 +23,15 @@ class _SummaryScreenState extends State<SummaryScreen> {
   Future<void> _loadMealsPerWeek() async {
     final startOfWeek = DateTime(2025, 4, 14); // Ngày bắt đầu tuần
     final totalMeals = await SqliteHelper().getMealsCountByWeek(startOfWeek);
-
+    final caloriesPerDay = await SqliteHelper().getCaloriesPerDay(startOfWeek);
+    debugPrint('Calories pẻ day: $caloriesPerDay');
     setState(() {
       _totalMeals = totalMeals; // Cập nhật số bữa mỗi ngày
+      _caloriesPerDay
+        ..clear()
+        ..addAll(caloriesPerDay); // Cập nhật calories mỗi ngày
     });
   }
-  
-  
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +42,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Meals Planned This Week',
+              'This week summary',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
@@ -62,45 +56,54 @@ class _SummaryScreenState extends State<SummaryScreen> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            // Expanded(
-            //   child: BarChart(
-            //     BarChartData(
-            //       alignment: BarChartAlignment.spaceAround,
-            //       maxY: 2500,
-            //       barTouchData: BarTouchData(enabled: true),
-            //       titlesData: FlTitlesData(
-            //         leftTitles: AxisTitles(
-            //           sideTitles: SideTitles(showTitles: true, interval: 500),
-            //         ),
-            //         bottomTitles: AxisTitles(
-            //           sideTitles: SideTitles(
-            //             showTitles: true,
-            //             getTitlesWidget: (value, meta) {
-            //               const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-            //               return Text(days[value.toInt()]);
-            //             },
-            //           ),
-            //         ),
-            //       ),
-            //       borderData: FlBorderData(show: false),
-            //       barGroups: _caloriesPerDay.asMap().entries.map((entry) {
-            //         final index = entry.key;
-            //         final value = entry.value;
-            //         return BarChartGroupData(
-            //           x: index,
-            //           barRods: [
-            //             BarChartRodData(
-            //               toY: value,
-            //               color: Colors.blue,
-            //               width: 16,
-            //               borderRadius: BorderRadius.circular(4),
-            //             ),
-            //           ],
-            //         );
-            //       }).toList(),
-            //     ),
-            //   ),
-            // ),
+            Expanded(
+              child: BarChart(
+                BarChartData(
+                  alignment: BarChartAlignment.spaceAround,
+                  maxY:
+                      2500, // Giá trị tối đa trên trục Y (có thể thay đổi tùy thuộc vào dữ liệu)
+                  barTouchData: BarTouchData(enabled: true),
+                  titlesData: FlTitlesData(
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: true, interval: 500),
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        getTitlesWidget: (value, meta) {
+                          const days = [
+                            'Mon',
+                            'Tue',
+                            'Wed',
+                            'Thu',
+                            'Fri',
+                            'Sat',
+                            'Sun'
+                          ];
+                          return Text(days[value.toInt()]);
+                        },
+                      ),
+                    ),
+                  ),
+                  borderData: FlBorderData(show: false),
+                  barGroups: _caloriesPerDay.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final value = entry.value;
+                    return BarChartGroupData(
+                      x: index,
+                      barRods: [
+                        BarChartRodData(
+                          toY: value,
+                          color: Colors.blue,
+                          width: 16,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ],
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
           ],
         ),
       ),

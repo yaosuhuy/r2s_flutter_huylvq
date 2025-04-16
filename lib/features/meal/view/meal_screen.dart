@@ -1,9 +1,11 @@
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:meal_planner_app/core/ultis/notifications.dart';
 import 'package:meal_planner_app/data/datasources/sqlite_helper.dart';
 import 'package:meal_planner_app/data/models/meal.dart';
 import 'package:meal_planner_app/features/meal/widgets/meal_item.dart';
 import 'package:meal_planner_app/features/planner/view/planner_screen.dart';
+import 'package:meal_planner_app/main.dart';
 
 class MealScreen extends StatefulWidget {
   const MealScreen({super.key});
@@ -25,6 +27,7 @@ class _MealScreenState extends State<MealScreen> {
     _loadMealsAnimated();
     _selectedDay = _focusedDay;
     _loadMealsByDate(_focusedDay);
+    checkAndScheduleNotifications();
   }
 
   Future<void> _loadMealsAnimated() async {
@@ -55,6 +58,36 @@ class _MealScreenState extends State<MealScreen> {
         _addMeal(result);
       } else if (index != null) {
         _editMeal(result);
+      }
+    }
+  }
+
+  Future<void> checkAndScheduleNotifications() async {
+    final meals = await SqliteHelper()
+        .getMeals(); // Lấy tất cả các bữa ăn từ cơ sở dữ liệu
+    final now = DateTime.now();
+
+    for (var meal in meals) {
+      if (meal.mealTime.isAfter(now)) {
+        debugPrint('Checking notification for meal: ${meal.mealName}');
+
+        // Kiểm tra nếu thông báo đã được đặt
+        final pendingNotifications =
+            await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+        final isNotificationScheduled = pendingNotifications.any(
+          (notification) => notification.id == meal.id,
+        );
+
+        if (!isNotificationScheduled) {
+          debugPrint('Scheduling notification for meal: ${meal.mealName}');
+          await scheduleNotification(meal);
+        } else {
+          debugPrint(
+              'Notification already scheduled for meal: ${meal.mealName}');
+        }
+      } else {
+        debugPrint(
+            'Skipping notification for meal: ${meal.mealName} (time has passed: ${meal.mealTime})');
       }
     }
   }

@@ -18,12 +18,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
 
   String? _selectedValue;
 
-  final List<String> _mealCategories = [
-    'Breakfast',
-    'Lunch',
-    'Dinner',
-    'Snack',
-  ];
+  List<String> _mealCategories = [];
 
   final TextEditingController _mealNameController = TextEditingController();
   final TextEditingController _mealCaloriesController = TextEditingController();
@@ -33,12 +28,22 @@ class _PlannerScreenState extends State<PlannerScreen> {
   @override
   void initState() {
     super.initState();
+    _loadMealCategories();
     if (widget.meal != null) {
       _mealNameController.text = widget.meal!.mealName;
       _mealCaloriesController.text = widget.meal!.mealCalories.toString();
       _selectedValue = widget.meal!.mealCategory;
       _selectedTime = TimeOfDay.fromDateTime(widget.meal!.mealTime);
     }
+  }
+
+  Future<void> _loadMealCategories() async {
+    final categories = await SqliteHelper().getCategories();
+    setState(() {
+      _mealCategories = categories
+          .map((category) => category['categoryName'] as String)
+          .toList();
+    });
   }
 
   Future<void> _selectTime(BuildContext context) async {
@@ -122,7 +127,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
     try {
       final success = await SqliteHelper().deleteMeal(id);
       if (success > 0) {
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(true);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Meal deleted successfully!'),
@@ -136,7 +141,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
             duration: Duration(seconds: 2),
           ),
         );
-      }
+      };
     } catch (e) {
       debugPrint("An error occured while deleting meal: $e");
       ScaffoldMessenger.of(context).showSnackBar(
@@ -259,7 +264,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).pop(); 
+            Navigator.of(context).pop();
           },
         ),
       ),
@@ -275,15 +280,23 @@ class _PlannerScreenState extends State<PlannerScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildLabel("Meal name"),
+                  const SizedBox(height: 10),
                   _buildTextField(
                       controller: _mealNameController,
                       hintText: "Enter meal name"),
+                  const SizedBox(height: 10),
                   _buildLabel("Meal type"),
+                  const SizedBox(height: 10),
                   _buildDropdown(),
+                  const SizedBox(height: 10),
                   _buildLabel("Calories"),
+                  const SizedBox(height: 10),
                   _buildTextField(
                       controller: _mealCaloriesController,
                       hintText: "Enter calories"),
+                  const SizedBox(height: 10),
+                  _buildLabel("Meal Time"),
+                  const SizedBox(height: 10),
                   _buildTimePicker(),
                 ],
               ),

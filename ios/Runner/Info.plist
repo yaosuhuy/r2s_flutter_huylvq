@@ -45,5 +45,18 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>fetch</string>
+        <string>remote-notification</string>
+    </array>
+    <key>NSUserTrackingUsageDescription</key>
+    <string>This identifier will be used to deliver personalized ads to you.</string>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>This app requires access to the local network to deliver notifications.</string>
+    <key>UIUserNotificationSettings</key>
+    <true/>
+    <key>UIRequiresFullScreen</key>
+    <true/>
 </dict>
 </plist>
